@@ -13,6 +13,7 @@ import java.util.List;
 public class TestServlet extends HttpServlet {
    // private Configuration cfg = new Configuration(Configuration.VERSION_2_3_26);
     private TodoList list = new TodoList();
+    {list.add("Example task");}
 //    {list.add("Example task");
 //        try{
 //            cfg.setTemplateLoader(new FileTemplateLoader(new File(".")));
@@ -37,8 +38,12 @@ public class TestServlet extends HttpServlet {
                 "</head>\n" +
                 "<body>\n" +
                 "<form method=\"post\" action=\"add\">\n" +
-                "    Task:<input name=\"task\">\n" +
+                "    Add task:<input name=\"task\">\n" +
                 "    <input type=\"submit\" value=\"add\">\n" +
+                "</form>\n" +
+                "<form method=\"post\" action=\"remove\">\n" +
+                "    Remove task:<input name=\"taskID\">\n" +
+                "    <input type=\"submit\" value=\"remove\">\n" +
                 "</form>\n" +
                 "<ol>\n" +
                 buf +
@@ -50,7 +55,11 @@ public class TestServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String what=req.getParameter("task");
-        list.add(what);
+        String whatID=req.getParameter("taskID");
+        if (what!=null && what.length()>0)
+            list.add(what);
+        if (whatID!=null && whatID.length()>0)
+            list.delete(Integer.parseInt(whatID));
         resp.sendRedirect("/");
     }
 }
